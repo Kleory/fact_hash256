@@ -1,0 +1,46 @@
+{
+  "parser": "babel-eslint",
+  "extends": ["airbnb-base", "airbnb/rules/react", "airbnb/hooks", "plugin:prettier/recommended", "prettier/react"],
+  "plugins": ["react", "prettier"],
+  "rules": {
+    "lines-between-class-members": ["error", "always", { "exceptAfterSingleLine": true }],
+    "yoda": "error",
+    "no-duplicate-imports": "error",
+    "no-console": "error",
+    "no-nested-ternary": "error",
+    "no-underscore-dangle": [
+      "error",
+      {
+        "allow": ["_id"]
+      }
+    ],
+    "react/no-array-index-key": "off",
+    "react/prop-types": "off",
+    "react/jsx-filename-extension": "off",
+    "react/jsx-props-no-spreading": "off",
+    "react-hooks/exhaustive-deps": "off",
+    "react/display-name": "off",
+    "no-shadow": "off",
+    "id-length": ["error", { "min": 2, "exceptions": ["s", "t"] }],
+    "arrow-body-style": ["error", "as-needed"]
+  },
+  "settings": {
+    "import/resolver": {
+      "webpack": {
+        "config": "webpack.config.js"
+      }
+    },
+    "react": {
+      "version": "detect"
+    }
+  },
+  "parserOptions": {
+    "ecmaVersion": 2018
+  },
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es6": true,
+    "node": true
+  }
+}
