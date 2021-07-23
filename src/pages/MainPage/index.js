@@ -24,7 +24,8 @@ const MainPage = () => {
     multiplicationSelectedNumber,
     sortSelectedList,
     saveChangingState,
-    transitionState } = ArrStore;
+    goToBack,
+    goToNext } = ArrStore;
 
   useEffect(() => {
     getArr()
@@ -47,8 +48,6 @@ const MainPage = () => {
   const handleSelect = (value, obj) => {
     addSelectedList(value, obj);
   }
-
-  console.log('============================render============================================');
 
   return (
     <div className={s.root}>
@@ -76,9 +75,16 @@ const MainPage = () => {
           )
         })}
       </form>
+      <div className={s.buttonsBlock}>
+        <div>
+          <Button type="primary" className={s.button} onClick={goToBack}>Отмена </Button>
+          /
+          <Button type="primary" className={s.button} onClick={goToNext}>Возврат </Button>
+        </div>
 
-      <Button type="primary" className={s.transitionState} onClick={transitionState}>Отмена </Button>
-      {/* <Button type="primary" className={s.transitionState} onClick={transitionState(false)}>Возврат </Button> */}
+        <Button type="primary" className={s.buttonReset} onClick={resetSelectedList}>Сбросить все </Button>
+      </div>
+
 
       <div className={s.output}>
         <div className={s.list}>
@@ -89,7 +95,7 @@ const MainPage = () => {
           <div>Хеширование данных</div>
           <div>Стоки: {hashString}</div>
           <div>Цифры: {hashNumber}</div>
-          <Button type="primary" className={s.resetButton} onClick={resetSelectedList}>Сброс </Button>
+
         </div>
       </div>
 
