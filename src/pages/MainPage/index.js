@@ -85,7 +85,7 @@ const MainPage = () => {
           <Button type="primary" className={s.button} onClick={goToNext} disabled={counter === statesArray.length}>Возврат </Button>
         </div>
 
-        <Button type="primary" className={s.buttonReset} onClick={resetSelectedList} disabled={selectedList.length == 0}>Сбросить все </Button>
+        <Button type="primary" className={s.buttonReset} onClick={resetSelectedList} disabled={Object.keys(sortSplitObj).length == 0 && counter === 0}>Сбросить все </Button>
       </div>
 
 
