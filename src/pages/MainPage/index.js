@@ -38,7 +38,7 @@ const MainPage = () => {
     if (type === 'number') {
       multiplicationSelectedNumber(valueArr)
     }
-    // console.log('--handleChange---', valueArr);
+
     sortSelectedList(valueArr, type);
 
     saveChangingState();
@@ -52,11 +52,11 @@ const MainPage = () => {
 
   return (
     <div className={s.root}>
-      <div>
+      <form>
         {Object.keys(customSplitObj).map((keyObj, idxObj) => {
 
           return (
-            <form key={idxObj} className={s.selectWrapper}>
+            <div key={idxObj} className={s.selectWrapper}>
               <div>{keyObj}</div>
               <Select
                 mode="tags"
@@ -72,10 +72,10 @@ const MainPage = () => {
                   </Option>
                 )}
               </Select>
-            </form>
+            </div>
           )
         })}
-      </div>
+      </form>
 
       <Button type="primary" className={s.transitionState} onClick={transitionState}>Отмена </Button>
       {/* <Button type="primary" className={s.transitionState} onClick={transitionState(false)}>Возврат </Button> */}

@@ -9,9 +9,7 @@ class ArrStore {
   @observable flatArr = [];
   @observable customSplitObj = {};
   @observable selectedList = [];
-  @observable concatString = '';
   @observable hashString = 0;
-  @observable multiplicationNumber = 1;
   @observable hashNumber = 0;
   @observable sortSplitObj = {};
   @observable statesArray = [];
@@ -94,21 +92,21 @@ class ArrStore {
   }
 
   @action concatSelectedString = (val) => {
-    this.concatString = '';
+    let concatString = '';
     for (let i = 0; i < val.length; i++) {
-      this.concatString += this.customSplitObj.string[val[i]]
+      concatString += this.customSplitObj.string[val[i]]
     }
 
-    return (this.concatString ? this.hashString = `${sha256(this.concatString)}` : this.hashString = '0')
+    return (concatString ? this.hashString = `${sha256(concatString)}` : this.hashString = '0')
   }
 
   @action multiplicationSelectedNumber = (val) => {
-    this.multiplicationNumber = 1;
+    let multiplicationNumber = 1;
     for (let i = 0; i < val.length; i++) {
-      this.multiplicationNumber *= this.customSplitObj.number[val[i]]
+      multiplicationNumber *= this.customSplitObj.number[val[i]]
     }
 
-    return (val.length > 0 ? this.hashNumber = `${sha256('' + this.multiplicationNumber)}` : this.hashNumber = 0)
+    return (val.length > 0 ? this.hashNumber = `${sha256('' + multiplicationNumber)}` : this.hashNumber = 0)
   }
 
   @action resetSelectedList = () => {
@@ -126,48 +124,45 @@ class ArrStore {
   }
 
   @action saveChangingState = () => {
-    const arrayValues = [];
+
     if (this.statesArray.length === 11) {
       this.setCounter(this.counter - 1);
       this.statesArray.shift();
+      console.log('---------');
     };
 
     this.setCounter(this.counter + 1);
 
     if (this.statesArray.length >= this.counter) {
-      for (let i = 0; i < this.counter; i++) {
+      const arrayValues = [];
+      for (let i = 0; i < this.counter - 1; i++) {
         arrayValues.push(toJS(this.statesArray[i]));
       }
       this.statesArray = arrayValues;
       console.log('--a', toJS(arrayValues), 'counter', this.counter, toJS(this.statesArray));
-      let clone = Object.assign({}, this.sortSplitObj)
-      this.statesArray.push(clone);
-      return
-    } else {
-      let clone = Object.assign({}, this.sortSplitObj)
-      this.statesArray.push(clone);
-    }
+    };
 
-
-
+    let cloneArrayItem = Object.assign({}, this.sortSplitObj)
+    this.statesArray.push(cloneArrayItem);
     console.log('---this.statesArray---', toJS(this.statesArray), 'counter', this.counter, this.statesArray.length);
     return this.statesArray;
   }
 
   @action transitionState = () => {
-    if (this.counter > 1 && this.selectedList.length > 0) {
-      this.setCounter(this.counter - 1);
-      let count = this.counter;
-      this.sortSplitObj = this.statesArray[count - 1];
+    let count = this.counter;
+    if (count >= 1 && this.selectedList.length > 0) {
+      this.setCounter(count - 1);
+      let clone = Object.assign({}, this.statesArray[count - 2])
+      this.sortSplitObj = clone;
 
-    } else if (this.counter <= 1 && this.selectedList.length <= 5) {
+    } else if (this.sortSplitObj === undefined) {
       this.sortSplitObj = {}
     }
 
     this.sortSplitObj.string !== undefined ? this.concatSelectedString(this.sortSplitObj.string) : this.hashString = 0;
     this.sortSplitObj.number !== undefined ? this.multiplicationSelectedNumber(this.sortSplitObj.number) : this.hashNumber = 0;
 
-    console.log('this.statesArray-back', toJS(this.statesArray), 'counter', this.counter, this.statesArray.length);
+    console.log('this.statesArray-back', toJS(this.statesArray), 'counter', this.counter);
 
     return this.sortSplitObj
   }
