@@ -149,13 +149,13 @@ class ArrStore {
   }
 
   @action transitionState = () => {
+    if (this.counter > 0) { this.setCounter(this.counter - 1) };
     let count = this.counter;
-    if (count >= 1 && this.selectedList.length > 0) {
-      this.setCounter(count - 1);
-      let clone = Object.assign({}, this.statesArray[count - 2])
+    if (count > 0) {
+      let clone = Object.assign({}, this.statesArray[count - 1])
       this.sortSplitObj = clone;
 
-    } else if (this.sortSplitObj === undefined) {
+    } else if (this.sortSplitObj === undefined || count === 0 && this.selectedList.length < 5) {
       this.sortSplitObj = {}
     }
 
