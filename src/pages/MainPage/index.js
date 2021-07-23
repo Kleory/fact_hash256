@@ -16,6 +16,7 @@ const MainPage = () => {
   const { hashString,
     hashNumber,
     sortSplitObj,
+    counter,
     getArr,
     customSplitObj,
     addSelectedList,
@@ -24,6 +25,7 @@ const MainPage = () => {
     multiplicationSelectedNumber,
     sortSelectedList,
     saveChangingState,
+    statesArray,
     goToBack,
     goToNext } = ArrStore;
 
@@ -51,7 +53,7 @@ const MainPage = () => {
 
   return (
     <div className={s.root}>
-      <form>
+      <div>
         {Object.keys(customSplitObj).map((keyObj, idxObj) => {
 
           return (
@@ -74,15 +76,15 @@ const MainPage = () => {
             </div>
           )
         })}
-      </form>
+      </div>
       <div className={s.buttonsBlock}>
         <div>
-          <Button type="primary" className={s.button} onClick={goToBack}>Отмена </Button>
+          <Button type="primary" className={s.button} onClick={goToBack} disabled={counter === 0}>Отмена </Button>
           /
-          <Button type="primary" className={s.button} onClick={goToNext}>Возврат </Button>
+          <Button type="primary" className={s.button} onClick={goToNext} disabled={counter === statesArray.length}>Возврат </Button>
         </div>
 
-        <Button type="primary" className={s.buttonReset} onClick={resetSelectedList}>Сбросить все </Button>
+        <Button type="primary" className={s.buttonReset} onClick={resetSelectedList} disabled={Object.keys(sortSplitObj).length == 0}>Сбросить все </Button>
       </div>
 
 
