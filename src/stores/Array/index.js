@@ -7,27 +7,27 @@ class ArrStore {
 
   @observable setTestArr = [];
   @observable flatArr = [];
-  @observable customSplitObj = {};
+  @observable statesArray = [];
   @observable selectedList = [];
+  @observable customSplitObj = {};
+  @observable sortSplitObj = {};
   @observable hashString = 0;
   @observable hashNumber = 0;
-  @observable sortSplitObj = {};
-  @observable statesArray = [];
+  @observable counter = 0;
   @observable prevStates = '';
 
-
-  @observable counter = 0;
 
   constructor() {
     makeObservable(this)
   }
 
-  @action setCounter = (value) => { this.counter = value }
-  @action setPrevStates = (value) => { this.prevStates = value }
+  @action
+  setCounter = (value) => { this.counter = value }
+  @action
+  setPrevStates = (value) => { this.prevStates = value }
 
   @action
   getArr = () => {
-
     this.isLoading = true;
     const testUrl = API.get(`${BASE_URL}`);
 
@@ -45,7 +45,6 @@ class ArrStore {
       .finally(() => {
         this.isLoading = false;
       });
-
   };
 
   @action
@@ -56,6 +55,7 @@ class ArrStore {
   @action
   customFlatArrMethod = (arr) => {
     for (let i = 0; i < arr.length; i++) {
+
       if (Array.isArray(arr[i])) {
         this.customFlatArrMethod(arr[i])
       } else {
@@ -65,55 +65,79 @@ class ArrStore {
   }
 
   insertArrayDataInObject = (obj, key, item) => {
-    obj[key] ? obj[key].push(item) : obj[key] = [item]
+    obj[key] ? obj[key].push(item) : obj[key] = [item];
   }
 
-  @action setCustomSplitObj = (value) => {
-    this.customSplitObj = value
+  @action
+  setCustomSplitObj = (value) => {
+    this.customSplitObj = value;
   }
 
   @action
   customSplitArrMethod = (arr) => {
     const tempObj = {}
+
     for (let i = 0; i < arr.length; i++) {
       let key = typeof arr[i];
       let data = JSON.stringify(arr[i]);
 
       if (arr[i] === null) key = 'null';
-      if (key === 'string') data = arr[i].toString()
+      if (key === 'string') data = arr[i].toString();
 
-      this.insertArrayDataInObject(tempObj, key, data)
+      this.insertArrayDataInObject(tempObj, key, data);
     }
-    // arr.map(arrValue => {
 
-    // })
-    this.setCustomSplitObj(tempObj)
+    this.setCustomSplitObj(tempObj);
   }
 
-  @action sortSelectedList = (value, type) => {
+  @action
+  sortSelectedList = (value, type) => {
     this.sortSplitObj[type] = value;
   }
 
-  @action concatSelectedString = (val) => {
-    let concatString = '';
-    for (let i = 0; i < val.length; i++) {
-      concatString += this.customSplitObj.string[val[i]]
+  @action
+  setHashString = (value) => {
+    this.hashString = value;
+  }
+
+  @action
+  concatSelectedString = (val) => {
+    if (val && val !== undefined) {
+      let concatString = '';
+      let stringArray = this.customSplitObj.string;
+
+      for (let i = 0; i < val.length; i++) {
+        concatString += stringArray[val[i]]
+      }
+
+      return this.setHashString(`${sha256(concatString)}`)
     }
 
-    return (concatString ? this.hashString = `${sha256(concatString)}` : this.hashString = '0')
+    return this.setHashString(0);
+  }
+
+  @action
+  setHashNumber = (value) => {
+    this.hashNumber = value;
   }
 
   @action multiplicationSelectedNumber = (val) => {
-    let multiplicationNumber = 1;
-    let numberArray = this.customSplitObj.number;
-    for (let i = 0; i < val.length; i++) {
-      multiplicationNumber *= numberArray[val[i]]
+    if (val && val.length > 0) {
+      let multiplicationNumber = 1;
+      let numberArray = this.customSplitObj.number;
+
+      for (let i = 0; i < val.length; i++) {
+        multiplicationNumber *= numberArray[val[i]]
+      }
+
+      return this.setHashNumber(`${sha256('' + multiplicationNumber)}`)
     }
 
-    return (val.length > 0 ? this.hashNumber = `${sha256('' + multiplicationNumber)}` : this.hashNumber = 0)
+    return this.setHashNumber(0);
   }
 
-  @action resetSelectedList = () => {
+  @action
+  resetSelectedList = () => {
     this.selectedList = [];
     this.hashString = 0;
     this.hashNumber = 0;
@@ -123,34 +147,37 @@ class ArrStore {
     this.prevStates = '';
   }
 
-  @action addSelectedList = (val, type) => {
+  @action
+  addSelectedList = (val, type) => {
     this.selectedList.push({ type: type, id: val });
   }
 
-  @action saveChangingState = () => {
-
+  @action
+  saveChangingState = () => {
     if (this.statesArray.length === 10) {
       this.setCounter(this.counter - 1);
-      let a = this.statesArray.shift();
-      this.setPrevStates(Object.assign({}, a));
+      let tempObject = this.statesArray.shift();
+      this.setPrevStates(Object.assign({}, tempObject));
     };
 
     this.setCounter(this.counter + 1);
 
     if (this.statesArray.length >= this.counter) {
       const arrayValues = [];
+
       for (let i = 0; i < this.counter - 1; i++) {
         arrayValues.push(toJS(this.statesArray[i]));
       }
+
       this.statesArray = arrayValues;
     };
 
-    let cloneArrayItem = Object.assign({}, this.sortSplitObj)
+    let cloneArrayItem = Object.assign({}, this.sortSplitObj);
     this.statesArray.push(cloneArrayItem);
-    return this.statesArray;
   }
 
-  @action goToBack = () => {
+  @action
+  goToBack = () => {
     let count = this.counter;
     let clone;
 
@@ -159,29 +186,32 @@ class ArrStore {
     } else {
       this.prevStates ? clone = this.prevStates : clone = {};
     };
+
     count ? this.setCounter(count - 1) : count
 
     this.sortSplitObj = clone;
 
-    clone.string !== undefined ? this.concatSelectedString(clone.string) : this.hashString = 0;
-    clone.number !== undefined ? this.multiplicationSelectedNumber(clone.number) : this.hashNumber = 0;
+    this.concatSelectedString(clone.string);
+    this.multiplicationSelectedNumber(clone.number);
   }
 
-  @action goToNext = () => {
+  @action
+  goToNext = () => {
     let count = this.counter;
     let clone;
+
     if (count < this.statesArray.length) {
       this.setCounter(count + 1)
       clone = Object.assign({}, this.statesArray[this.counter - 1])
-
-    } else { clone = Object.assign({}, this.statesArray[this.statesArray.length - 1]) }
+    } else {
+      clone = Object.assign({}, this.statesArray[this.statesArray.length - 1])
+    }
 
     this.sortSplitObj = clone;
 
-    clone.string !== undefined ? this.concatSelectedString(clone.string) : this.hashString = 0;
-    clone.number !== undefined ? this.multiplicationSelectedNumber(clone.number) : this.hashNumber = 0;
+    this.concatSelectedString(clone.string);
+    this.multiplicationSelectedNumber(clone.number);
   }
-
 }
 
 export default new ArrStore();
