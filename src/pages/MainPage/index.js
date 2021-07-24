@@ -18,7 +18,6 @@ const MainPage = () => {
     sortSplitObj,
     counter,
     getArr,
-    selectedList,
     customSplitObj,
     addSelectedList,
     resetSelectedList,
@@ -32,16 +31,16 @@ const MainPage = () => {
 
   useEffect(() => {
     getArr()
-  }, [])
+  }, []);
 
-  function handleChange(valueArr, type) {
+  const handleChange = (valueArr, type) => {
     if (type === 'string') {
-      concatSelectedString(valueArr)
-    }
+      concatSelectedString(valueArr);
+    };
 
     if (type === 'number') {
-      multiplicationSelectedNumber(valueArr)
-    }
+      multiplicationSelectedNumber(valueArr);
+    };
 
     sortSelectedList(valueArr, type);
 
@@ -70,24 +69,29 @@ const MainPage = () => {
                 value={sortSplitObj[keyObj] || []}
               >
                 {customSplitObj[keyObj].map((arrItem, idx) =>
-                  <Option key={idx} >{arrItem}
-                  </Option>
+                  <Option key={idx}>{arrItem}</Option>
                 )}
               </Select>
             </div>
           )
         })}
       </div>
+
       <div className={s.buttonsBlock}>
         <div>
-          <Button type="primary" className={s.button} onClick={goToBack} disabled={counter === 0}>Отмена </Button>
+          <Button type="primary" className={s.button} onClick={goToBack} disabled={counter === 0}>
+            Отмена
+          </Button>
           /
-          <Button type="primary" className={s.button} onClick={goToNext} disabled={counter === statesArray.length}>Возврат </Button>
+          <Button type="primary" className={s.button} onClick={goToNext} disabled={counter === statesArray.length}>
+            Возврат
+          </Button>
         </div>
 
-        <Button type="primary" className={s.buttonReset} onClick={resetSelectedList} disabled={Object.keys(sortSplitObj).length == 0 && counter === 0}>Сбросить все </Button>
+        <Button type="primary" className={s.buttonReset} onClick={resetSelectedList} disabled={Object.keys(sortSplitObj).length == 0 && statesArray.length === 0}>
+          Сбросить все
+        </Button>
       </div>
-
 
       <div className={s.output}>
         <div className={s.list}>
@@ -98,12 +102,9 @@ const MainPage = () => {
           <div>Хеширование данных</div>
           <div>Стоки: {hashString}</div>
           <div>Цифры: {hashNumber}</div>
-
         </div>
       </div>
-
     </div>
-
   );
 };
 
