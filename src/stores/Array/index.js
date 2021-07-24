@@ -64,26 +64,30 @@ class ArrStore {
     }
   }
 
+  insertArrayDataInObject = (obj, key, item) => {
+    obj[key] ? obj[key].push(item) : obj[key] = [item]
+  }
+
+  @action setCustomSplitObj = (value) => {
+    this.customSplitObj = value
+  }
+
   @action
   customSplitArrMethod = (arr) => {
-    arr.map(item => {
-      if (item !== null && item !== undefined) {
-        const key = typeof item;
-        let data = ''
-        if (key === 'object') {
-          data = JSON.stringify(item)
-        } else {
-          data = item.toString()
-        }
-        this.customSplitObj[key] ? this.customSplitObj[key].push(data) : this.customSplitObj[key] = [data]
-      }
-      else if (item === undefined) {
-        this.customSplitObj.undefined ? this.customSplitObj.undefined.push('undefined') : this.customSplitObj.undefined = ['undefined']
-      }
-      else {
-        this.customSplitObj.null ? this.customSplitObj.null.push('null') : this.customSplitObj.null = ['null']
-      }
-    })
+    const tempObj = {}
+    for (let i = 0; i < arr.length; i++) {
+      let key = typeof arr[i];
+      let data = JSON.stringify(arr[i]);
+
+      if (arr[i] === null) key = 'null';
+      if (key === 'string') data = arr[i].toString()
+
+      this.insertArrayDataInObject(tempObj, key, data)
+    }
+    // arr.map(arrValue => {
+
+    // })
+    this.setCustomSplitObj(tempObj)
   }
 
   @action sortSelectedList = (value, type) => {
